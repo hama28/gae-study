@@ -4,13 +4,13 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def home():
     message = 'Hello World!'
     return render_template('index.html', message=message)
 
 
-@app.route('/api/examples')
+@app.route('/api/examples', methods=['GET', 'POST'])
 def examples():
     if request.method == 'GET':
         igarashi = {
@@ -30,6 +30,13 @@ def examples():
             'examples': examples
         }
         return res
+    elif request.method == 'POST':
+        json_data = request.get_json()
+        res = {
+            'id': 999,
+            'author': json_data['author']
+        }
+        return res, 201
 
 
 @app.errorhandler(404)
