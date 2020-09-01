@@ -1,5 +1,4 @@
-from flask import render_template, Flask
-from forms import MyForm
+from flask import Flask, render_template, request
 
 
 app = Flask(__name__)
@@ -7,25 +6,35 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    message = ''
-    form = MyForm(csrf_enabled=False)
-    if form.validate_on_submit():
-        message = form.message.data
-    else:
-        message_validation_errors = form.errors.get('message')
-        if message_validation_errors:
-            message = message_validation_errors[0]  # 今回は0番目のエラーのみ表示する
+    message = 'Hello World!'
+    return render_template('index.html', message=message)
 
-    return render_template(
-        'index.html',
-        message=message,
-        form=form,
-    )
+
+@app.route('/api/examples')
+def examples():
+    if request.method == 'GET':
+        igarashi = {
+            'author': 'Tsuyoshi Igarashi',
+            'id': 1
+        }
+        miyayama = {
+            'author': 'Ryutaro Miyayama',
+            'id': 2
+        }
+        shirakawa = {
+            'author': 'Mai Shirakawa',
+            'id': 3
+        }
+        examples = [igarashi, miyayama, shirakawa]
+        res = {
+            'examples': examples
+        }
+        return res
 
 
 @app.errorhandler(404)
 def error_404(exception):
-    return {'message': 'Error: Resource not found.'}, 404
+    return {'message': 'Error: Resouce not found.'}, 404
 
 
 if __name__ == '__main__':
