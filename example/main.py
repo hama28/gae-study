@@ -10,26 +10,34 @@ def home():
     return render_template('index.html', message=message)
 
 
+@app.route('/api/examples/<key_id>')
 @app.route('/api/examples', methods=['GET', 'POST'])
-def examples():
+def examples(key_id=None):
     if request.method == 'GET':
-        igarashi = {
-            'author': 'Tsuyoshi Igarashi',
-            'id': 1
-        }
-        miyayama = {
-            'author': 'Ryutaro Miyayama',
-            'id': 2
-        }
-        shirakawa = {
-            'author': 'Mai Shirakawa',
-            'id': 3
-        }
-        examples = [igarashi, miyayama, shirakawa]
-        res = {
-            'examples': examples
-        }
-        return res
+        if key_id:
+            igarashi = {
+                'author': 'Tsuyoshi Igarashi',
+                'id': 1
+            }
+            return igarashi
+        else:
+            igarashi = {
+                'author': 'Tsuyoshi Igarashi',
+                'id': 1
+            }
+            miyayama = {
+                'author': 'Ryutaro Miyayama',
+                'id': 2
+            }
+            shirakawa = {
+                'author': 'Mai Shirakawa',
+                'id': 3
+            }
+            examples = [igarashi, miyayama, shirakawa]
+            res = {
+                'examples': examples
+            }
+            return res
     elif request.method == 'POST':
         json_data = request.get_json()
         res = {
