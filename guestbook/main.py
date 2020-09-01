@@ -10,7 +10,7 @@ def home():
     return render_template('index.html', message=message)
 
 
-@app.route('/api/greetings')
+@app.route('/api/greetings', methods=['GET', 'POST'])
 def greetings(key_id=None):
     if request.method == 'GET':
         igarashi = {
@@ -33,6 +33,14 @@ def greetings(key_id=None):
             'greetings': greetings
         }
         return res
+    elif request.method == 'POST':
+        payload = request.get_json()
+        res = {
+            'id': 999,
+            'author': payload['author'],
+            'message': payload['message']
+        }
+        return res, 201
 
 
 @app.route('/err500')
