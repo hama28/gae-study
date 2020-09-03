@@ -1,12 +1,23 @@
+import logging
 from flask import Flask, render_template, request
 
 
 app = Flask(__name__)
 
 
+# infomationレベル以下のログも出力させる
+logging.getLogger().setLevel(logging.DEBUG)
+
+
 @app.route('/', methods=['GET'])
 def home():
-    message = 'Hello World!'
+    logging.debug("Debug message")
+    logging.info("Information message")
+    logging.warning("Warning message")
+    logging.error("Error message")
+    logging.critical("Critical message")
+
+    message = 'Logging Sample'
     return render_template('index.html', message=message)
 
 

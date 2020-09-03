@@ -10,29 +10,38 @@ def home():
     return render_template('index.html', message=message)
 
 
+@app.route('/api/greetings/<key_id>')
 @app.route('/api/greetings', methods=['GET', 'POST'])
 def greetings(key_id=None):
     if request.method == 'GET':
-        igarashi = {
-            'id': 1,
-            'author': 'Tsuyoshi Igarashi',
-            'message': 'Hello'
-        }
-        miyayama = {
-            'id': 2,
-            'author': 'Ryutaro Miyayama',
-            'message': 'Looks good to me'
-        }
-        shirakawa = {
-            'id': 3,
-            'author': 'Mai Shirakawa',
-            'message': 'Banana!'
-        }
-        greetings = [igarashi, miyayama, shirakawa]
-        res = {
-            'greetings': greetings
-        }
-        return res
+        if key_id:
+            igarashi = {
+                'id': 1,
+                'author': 'Tsuyoshi Igarashi',
+                'message': 'Hello'
+            }
+            return igarashi
+        else:
+            igarashi = {
+                'id': 1,
+                'author': 'Tsuyoshi Igarashi',
+                'message': 'Hello'
+            }
+            miyayama = {
+                'id': 2,
+                'author': 'Ryutaro Miyayama',
+                'message': 'Looks good to me'
+            }
+            shirakawa = {
+                'id': 3,
+                'author': 'Mai Shirakawa',
+                'message': 'Banana!'
+            }
+            greetings = [igarashi, miyayama, shirakawa]
+            res = {
+                'greetings': greetings
+            }
+            return res
     elif request.method == 'POST':
         payload = request.get_json()
         res = {
