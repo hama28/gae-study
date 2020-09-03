@@ -1,21 +1,27 @@
-import logging
+import sys
+
 from flask import Flask, render_template, request
+from google.cloud import logging
 
 
 app = Flask(__name__)
 
 
 # infomationレベル以下のログも出力させる
-logging.getLogger().setLevel(logging.DEBUG)
+# logging.getLogger().setLevel(logging.DEBUG)
 
 
 @app.route('/', methods=['GET'])
 def home():
-    logging.debug("Debug message")
-    logging.info("Information message")
-    logging.warning("Warning message")
-    logging.error("Error message")
-    logging.critical("Critical message")
+    logging_client = logging.Client()
+
+    logger = logging_client.logger('MyExampleApplication')
+
+    logger.log_text('Debug message', severity='DEBUG')
+    logger.log_text('Information message', severity='INFO')
+    logger.log_text('Warning message', severity='WARNING')
+    logger.log_text('Error message', severity='ERROR')
+    logger.log_text('Critical message', severity='CRITICAL')
 
     message = 'Logging Sample'
     return render_template('index.html', message=message)
@@ -60,6 +66,7 @@ def examples(key_id=None):
 
 @app.errorhandler(404)
 def error_404(exception):
+    # logging.exception(exception)
     return {'message': 'Error: Resouce not found.'}, 404
 
 

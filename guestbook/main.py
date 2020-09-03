@@ -1,7 +1,11 @@
+import logging
 from flask import Flask, render_template, abort, request
 
 
 app = Flask(__name__)
+
+
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 @app.route('/')
@@ -59,11 +63,13 @@ def err500():
 
 @app.errorhandler(404)
 def error_404(exception):
+    logging.exception(exception)
     return {'message': 'Error: Resouce not found.'}, 404
 
 
 @app.errorhandler(500)
 def error_500(exception):
+    logging.exception(exception)
     return {'message': 'Please contact the administrator.'}, 500
 
 
