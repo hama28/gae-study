@@ -1,33 +1,16 @@
 import logging
-
 from flask import Flask, render_template, request
-from google.cloud import logging as cloud_logging
-
-logging_client = cloud_logging.Client()
-
-logging_client.setup_logging()
-
-logger = logging.getLogger('MyExampleApplication')
-
-logger.setLevel(logging.DEBUG)
 
 
 app = Flask(__name__)
 
 
 # infomationレベル以下のログも出力させる
-# logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 @app.route('/', methods=['GET'])
 def home():
-
-    logger.debug("Debug message")
-    logger.info("Information message")
-    logger.warning("Warning message")
-    logger.error("Error message")
-    logger.critical("Critical message")
-
     message = 'Logging Sample'
     return render_template('index.html', message=message)
 
@@ -71,7 +54,7 @@ def examples(key_id=None):
 
 @app.errorhandler(404)
 def error_404(exception):
-    # logging.exception(exception)
+    logging.exception(exception)
     return {'message': 'Error: Resouce not found.'}, 404
 
 
