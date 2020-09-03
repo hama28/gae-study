@@ -1,7 +1,15 @@
-import sys
+import logging
 
 from flask import Flask, render_template, request
-from google.cloud import logging
+from google.cloud import logging as cloud_logging
+
+logging_client = cloud_logging.Client()
+
+logging_client.setup_logging()
+
+logger = logging.getLogger('MyExampleApplication')
+
+logger.setLevel(logging.DEBUG)
 
 
 app = Flask(__name__)
@@ -13,15 +21,12 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home():
-    logging_client = logging.Client()
 
-    logger = logging_client.logger('MyExampleApplication')
-
-    logger.log_text('Debug message', severity='DEBUG')
-    logger.log_text('Information message', severity='INFO')
-    logger.log_text('Warning message', severity='WARNING')
-    logger.log_text('Error message', severity='ERROR')
-    logger.log_text('Critical message', severity='CRITICAL')
+    logger.debug("Debug message")
+    logger.info("Information message")
+    logger.warning("Warning message")
+    logger.error("Error message")
+    logger.critical("Critical message")
 
     message = 'Logging Sample'
     return render_template('index.html', message=message)
