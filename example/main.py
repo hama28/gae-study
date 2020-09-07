@@ -1,5 +1,7 @@
 import logging
+from datetime import datetime
 from flask import Flask, render_template, request
+from google.cloud import datastore
 
 
 app = Flask(__name__)
@@ -9,10 +11,31 @@ app = Flask(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def home():
-    message = 'Logging Sample'
-    return render_template('index.html', message=message)
+    res = insert()
+    return res
+
+def insert():
+    # Datastoreのクライアントオブジェクトを取得
+    client = datastore.Client()
+
+    # Exampleカインドに保存するためのkeyを作成
+    key = client.key('Example')
+
+    # エンティティを作成し、プロパティを設定する
+    entity = datastore.Entity(key=key)
+    entity['author'] = 'Tsuyoshi Igarashi'
+    entity['created'] = datetime.now()
+
+    # Datastoreに保存する
+    client.put(entity)
+
+    # エンティティにidプロパティを追加する
+    entity['id'] = entity.key.id
+
+    # エンティティを返す
+    return entity
 
 
 @app.route('/api/examples/<key_id>')
