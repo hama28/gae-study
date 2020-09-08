@@ -11,3 +11,12 @@ def insert(author, message):
     client.put(entity)
     entity['id'] = entity.key.id
     return entity
+
+def get_all():
+    client = datastore.Client()
+    query = client.query(kind='Greeting')
+    query.order = '-created'
+    greetings = list(query.fetch())
+    for entity in greetings:
+        entity['id'] = entity.key.id
+    return greetings

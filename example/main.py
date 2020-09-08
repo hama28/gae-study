@@ -13,7 +13,8 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 @app.route('/')
 def home():
-    res = insert()
+    # res = insert()
+    res = get_all()
     return res
 
 def insert():
@@ -45,6 +46,32 @@ def insert():
 
     # エンティティを返す
     return entity
+
+def get_all():
+    # Datastoreのクライアントオブジェクトを取得
+    client = datastore.Client()
+
+    # Queryオブジェクトを取得する
+    query = client.query(kind='Example')
+
+    # フィルターを追加
+    query.add_filter('author', '=', 'Sasuke Uchiha')
+
+    # 日付の新しい順
+    #query.order = '-created'
+
+    # クエリの実行
+    entities = list(query.fetch())
+
+    # すべてのエンティティにidプロパティを追加する
+    for entity in entities:
+        entity['id'] = entity.key.id
+    
+    # レスポンス用のJSONを作成
+    res = {
+        'example': entities
+    }
+    return res
 
 
 @app.route('/api/examples/<key_id>')

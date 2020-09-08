@@ -17,29 +17,11 @@ def home():
 @app.route('/api/greetings', methods=['GET', 'POST'])
 def greetings(key_id=None):
     if request.method == 'GET':
-        if key_id:
-            igarashi = {
-                'id': key_id,
-                'author': 'Tsuyoshi Igarashi',
-                'message': 'Hello'
-            }
-            return igarashi
-        else:
-            igarashi = {
-                'id': 1,
-                'author': 'Tuyoshi Igarashi',
-                'message': 'Hello'
-            }
-            miyayama = {
-                'id': 2,
-                'author': 'Ryutaro Miyayama',
-                'message': 'Looks good to me'
-            }
-            greetings = [igarashi, miyayama]
-            res = {
-                'greetings': greetings
-            }
-            return res
+        greetings = ds.get_all()
+        res = {
+            'greetings':greetings
+        }
+        return res
     elif request.method == 'POST':
         author = request.json['author']
         message = request.json['message']
