@@ -14,7 +14,9 @@ logging.getLogger().setLevel(logging.DEBUG)
 @app.route('/')
 def home():
     # res = insert()
-    res = get_all()
+    # res = get_all()
+    key_id = 5644004762845184
+    res = get_by_id(key_id)
     return res
 
 def insert():
@@ -72,6 +74,19 @@ def get_all():
         'example': entities
     }
     return res
+
+def get_by_id(key_id):
+    client = datastore.Client()
+    # KeyIDを指定してkeyを生成
+    key = client.key('Example', key_id)
+    # keyを使ってエンティティを取得
+    entity = client.get(key=key)
+    # エンティティが存在しなければエラーメッセージを返す
+    if not entity:
+        return {'message': 'リソースが見つかりませんでした。'}
+    # エンティティにidプロパティを追加
+    entity['id'] = entity.key.id
+    return entity
 
 
 @app.route('/api/examples/<key_id>')

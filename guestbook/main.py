@@ -17,6 +17,12 @@ def home():
 @app.route('/api/greetings', methods=['GET', 'POST'])
 def greetings(key_id=None):
     if request.method == 'GET':
+        if key_id:
+            entity = ds.get_by_id(key_id)
+            if not entity:
+                abort(404)
+            return entity
+        
         greetings = ds.get_all()
         res = {
             'greetings':greetings

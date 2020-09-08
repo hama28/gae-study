@@ -1,4 +1,5 @@
 from datetime import datetime
+from http import client
 from google.cloud import datastore
 
 def insert(author, message):
@@ -20,3 +21,11 @@ def get_all():
     for entity in greetings:
         entity['id'] = entity.key.id
     return greetings
+
+def get_by_id(key_id):
+    client = datastore.Client()
+    key = client.key('Greeting', int(key_id))
+    entity = client.get(key=key)
+    if entity:
+        entity['id'] = entity.key.id
+    return entity
