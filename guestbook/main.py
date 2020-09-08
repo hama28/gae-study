@@ -1,16 +1,15 @@
 import logging
-from flask import Flask, render_template, abort, request
+from flask import Flask, abort, request, render_template
+import ds
 
 
 app = Flask(__name__)
-
-
 logging.getLogger().setLevel(logging.DEBUG)
 
 
 @app.route('/')
 def home():
-    message = 'App Engine勉強会 にようこそ'
+    message = 'App Engine 勉強会 にようこそ'
     return render_template('index.html', message=message)
 
 
@@ -20,7 +19,7 @@ def greetings(key_id=None):
     if request.method == 'GET':
         if key_id:
             igarashi = {
-                'id': 1,
+                'id': key_id,
                 'author': 'Tsuyoshi Igarashi',
                 'message': 'Hello'
             }
@@ -28,7 +27,7 @@ def greetings(key_id=None):
         else:
             igarashi = {
                 'id': 1,
-                'author': 'Tsuyoshi Igarashi',
+                'author': 'Tuyoshi Igarashi',
                 'message': 'Hello'
             }
             miyayama = {
@@ -36,24 +35,16 @@ def greetings(key_id=None):
                 'author': 'Ryutaro Miyayama',
                 'message': 'Looks good to me'
             }
-            shirakawa = {
-                'id': 3,
-                'author': 'Mai Shirakawa',
-                'message': 'Banana!'
-            }
-            greetings = [igarashi, miyayama, shirakawa]
+            greetings = [igarashi, miyayama]
             res = {
                 'greetings': greetings
             }
             return res
     elif request.method == 'POST':
-        payload = request.get_json()
-        res = {
-            'id': 999,
-            'author': payload['author'],
-            'message': payload['message']
-        }
-        return res, 201
+        author = request.json['author']
+        message = request.json['message']
+        entity = ds.insert(author, message)
+        return entity, 201
 
 
 @app.route('/err500')
@@ -64,7 +55,7 @@ def err500():
 @app.errorhandler(404)
 def error_404(exception):
     logging.exception(exception)
-    return {'message': 'Error: Resouce not found.'}, 404
+    return {'message': 'Error: Resource not found.'}, 404
 
 
 @app.errorhandler(500)
