@@ -25,21 +25,23 @@ def insert():
 
     # エンティティを作成し、プロパティを設定する
     entity = datastore.Entity(key=key)
-    entity['author'] = 'Sasuke Uchiha'
+    entity['author'] = 'Naruto Uzumaki'
     entity['created'] = datetime.now()
 
     # Datastoreに保存する
     client.put(entity)
 
-    entity.update({
-        'author': 'Itachi Uchiha',
+    entity2 = datastore.Entity(key=key)
+    entity2.update({
+        'author': 'Sakura Haruno',
         'created': datetime.now(),
-    })
+        })
 
-    client.put(entity)
+    client.put(entity2)
 
     # エンティティにidプロパティを追加する
     entity['id'] = entity.key.id
+    entity2['id'] = entity2.key.id
 
     # エンティティを返す
     return entity
