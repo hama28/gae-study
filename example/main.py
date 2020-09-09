@@ -15,8 +15,9 @@ logging.getLogger().setLevel(logging.DEBUG)
 def home():
     # res = insert()
     # res = get_all()
-    key_id = 5644004762845184
-    res = get_by_id(key_id)
+    key_id = 5073695114526720
+    # res = get_by_id(key_id)
+    res = update(key_id)
     return res
 
 def insert():
@@ -85,6 +86,17 @@ def get_by_id(key_id):
     if not entity:
         return {'message': 'リソースが見つかりませんでした。'}
     # エンティティにidプロパティを追加
+    entity['id'] = entity.key.id
+    return entity
+
+def update(key_id):
+    client = datastore.Client()
+    key = client.key('Example', key_id)
+    entity = client.get(key=key)
+    if not entity:
+        return {'message': 'リソースが見つかりませんでした。'}
+    entity['author'] = 'NARUTO UZUMAKI'
+    client.put(entity)
     entity['id'] = entity.key.id
     return entity
 

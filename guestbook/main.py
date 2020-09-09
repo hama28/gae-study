@@ -28,11 +28,22 @@ def greetings(key_id=None):
             'greetings':greetings
         }
         return res
+    
     elif request.method == 'POST':
         author = request.json['author']
         message = request.json['message']
         entity = ds.insert(author, message)
         return entity, 201
+    
+    elif request.method == 'PUT':
+        entity = ds.get_by_id(key_id)
+        if not entity:
+            abort(404)
+            return entity
+        entity['author'] = request.json['author']
+        entity['message'] = request.json['message']
+        entity = ds.update(entity)
+        return entity
 
 
 @app.route('/err500')
