@@ -13,7 +13,7 @@ def home():
     return render_template('index.html', message=message)
 
 
-@app.route('/api/greetings/<key_id>', methods=['GET', 'PUT'])
+@app.route('/api/greetings/<key_id>', methods=['GET', 'PUT', 'DELETE'])
 @app.route('/api/greetings', methods=['GET', 'POST'])
 def greetings(key_id=None):
     if request.method == 'GET':
@@ -44,6 +44,10 @@ def greetings(key_id=None):
         entity['message'] = request.json['message']
         entity = ds.update(entity)
         return entity
+    
+    elif request.method == 'DELETE':
+        ds.delete(key_id)
+        return '', 204
 
 
 @app.route('/err500')

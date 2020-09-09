@@ -37,3 +37,8 @@ def update(entity):
     client.put(entity)
     entity['id'] = entity.key.id
     return entity
+
+def delete(key_id):
+    client = datastore.Client()
+    key = client.key('Greeting', int(key_id))
+    client.delete(key)

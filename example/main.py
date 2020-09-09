@@ -15,9 +15,10 @@ logging.getLogger().setLevel(logging.DEBUG)
 def home():
     # res = insert()
     # res = get_all()
-    key_id = 5073695114526720
+    key_id = 5710353417633792
     # res = get_by_id(key_id)
-    res = update(key_id)
+    # res = update(key_id)
+    res = delete(key_id)
     return res
 
 def insert():
@@ -99,6 +100,12 @@ def update(key_id):
     client.put(entity)
     entity['id'] = entity.key.id
     return entity
+
+def delete(key_id):
+    client = datastore.Client()
+    key = client.key('Example', key_id)
+    client.delete(key)
+    return {'message': 'Deleted!'}
 
 
 @app.route('/api/examples/<key_id>')
