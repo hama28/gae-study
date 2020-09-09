@@ -2,6 +2,7 @@ from datetime import datetime
 from http import client
 from google.cloud import datastore
 
+# データの追加
 def insert(author, message):
     client = datastore.Client()
     key = client.key("Greeting")
@@ -13,6 +14,7 @@ def insert(author, message):
     entity['id'] = entity.key.id
     return entity
 
+# データの取得
 def get_all():
     client = datastore.Client()
     query = client.query(kind='Greeting')
@@ -22,6 +24,7 @@ def get_all():
         entity['id'] = entity.key.id
     return greetings
 
+# 指定データの取得
 def get_by_id(key_id):
     client = datastore.Client()
     key = client.key('Greeting', int(key_id))
@@ -30,6 +33,7 @@ def get_by_id(key_id):
         entity['id'] = entity.key.id
     return entity
 
+# データの更新
 def update(entity):
     if 'id' in entity:
         del entity['id']
@@ -38,7 +42,22 @@ def update(entity):
     entity['id'] = entity.key.id
     return entity
 
+# データの削除
 def delete(key_id):
     client = datastore.Client()
     key = client.key('Greeting', int(key_id))
     client.delete(key)
+
+
+# エンティティグループ
+# データの追加
+def insert_comment(parent_id, message):
+    client = datastore.Client()
+    parent_key = client.key('Greenting', int(parent_id))
+    key = client.key('Comment', parent=parent_key)
+    entity = datastore.Entity(key=key)
+    entity['message'] = message
+    entity['created'] = datetime.now()
+    client.put(entity)
+    entity['id'] = entity.key.id
+    return entity

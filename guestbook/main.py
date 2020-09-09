@@ -50,6 +50,17 @@ def greetings(key_id=None):
         return '', 204
 
 
+@app.route('/api/comments', methods=['GET', 'POST'])
+def comments():
+    if request.method == 'GET':
+        return '', 200
+    elif request.method == 'POST':
+        parent_id = request.json['parent_id']
+        message = request.json['message']
+        entity = ds.insert_comment(parent_id, message)
+        return entity, 201
+
+
 @app.route('/err500')
 def err500():
     abort(500)
