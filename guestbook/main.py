@@ -13,7 +13,7 @@ def home():
     return render_template('index.html', message=message)
 
 
-@app.route('/api/greetings/<key_id>')
+@app.route('/api/greetings/<key_id>', methods=['GET', 'PUT'])
 @app.route('/api/greetings', methods=['GET', 'POST'])
 def greetings(key_id=None):
     if request.method == 'GET':
