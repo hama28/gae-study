@@ -19,7 +19,9 @@ def home():
 @app.route('/photos', methods=['GET', 'POST'])
 def photos():
     if request.method == 'GET':
-        return render_template('photos.html')
+        client = storage.Client()
+        bucket = client.get_bucket('gae-study-guestbook-282828')
+        return render_template('photos.html', blobs=bucket.list_blobs())
     else:
         uploaded_file = request.files['file']
         client = storage.Client()

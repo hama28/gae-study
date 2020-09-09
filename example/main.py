@@ -15,7 +15,9 @@ logging.getLogger().setLevel(logging.DEBUG)
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
-        return render_template('index.html')
+        client = storage.Client()
+        bucket = client.get_bucket('my-first-project-288014')
+        return render_template('index.html', blobs=bucket.list_blobs())
     else:
         uploaded_file = request.files['file']
         client = storage.Client()
