@@ -25,26 +25,27 @@ def greetings(key_id=None):
         
         greetings = ds.get_all()
         res = {
-            'greetings':greetings
+            'greetings': greetings
         }
         return res
-    
+
     elif request.method == 'POST':
         author = request.json['author']
         message = request.json['message']
         entity = ds.insert(author, message)
         return entity, 201
-    
+
     elif request.method == 'PUT':
         entity = ds.get_by_id(key_id)
         if not entity:
             abort(404)
             return entity
+
         entity['author'] = request.json['author']
         entity['message'] = request.json['message']
         entity = ds.update(entity)
         return entity
-    
+
     elif request.method == 'DELETE':
         ds.delete(key_id)
         return '', 204
@@ -53,7 +54,13 @@ def greetings(key_id=None):
 @app.route('/api/comments', methods=['GET', 'POST'])
 def comments():
     if request.method == 'GET':
-        return '', 200
+        parent_id = request.args['parent_id']
+        entities = ds.get_comments(parent_id)
+        res = {
+            'comments': entities
+        }
+        return res, 200
+
     elif request.method == 'POST':
         parent_id = request.json['parent_id']
         message = request.json['message']

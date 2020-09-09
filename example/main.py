@@ -15,12 +15,13 @@ logging.getLogger().setLevel(logging.DEBUG)
 def home():
     # res = insert()
     # res = get_all()
-    # key_id = 5710353417633792
+    key_id = 5073695114526720
     # res = get_by_id(key_id)
     # res = update(key_id)
     #res = delete(key_id)
-    parent_id = 5073695114526720
-    res = add_child(parent_id)
+    parent_id = 5631671361601536
+    # res = add_child(parent_id)
+    res = get_child(parent_id)
     return res
 
 def insert():
@@ -118,6 +119,21 @@ def add_child(parent_id):
     client.put(entity)
     entity['id'] = entity.key.id
     return entity
+
+def get_child(parent_id):
+    client = datastore.Client()
+    # ParentIDを指定して親キーの生成
+    ancestor = client.key('Example', parent_id)
+    # 親キーを使ってアンセスタークエリを実行
+    query = client.query(kind='EampleChild', ancestor=ancestor)
+    entities = list(query.fetch())
+    # すべてのエンティティにidプロパティを追加
+    for entity in entities:
+        entity['id'] = entity.key.id
+    res = {
+        'example_children': entities
+    }
+    return res
 
 
 @app.route('/api/examples/<key_id>')

@@ -53,11 +53,21 @@ def delete(key_id):
 # データの追加
 def insert_comment(parent_id, message):
     client = datastore.Client()
-    parent_key = client.key('Greenting', int(parent_id))
+    parent_key = client.key('Greeting', int(parent_id))
     key = client.key('Comment', parent=parent_key)
     entity = datastore.Entity(key=key)
     entity['message'] = message
-    entity['created'] = datetime.now()
+    entity["created"] = datetime.now()
     client.put(entity)
     entity['id'] = entity.key.id
     return entity
+
+# 子エンティティの取得
+def get_comments(parent_id):
+    client = datastore.Client()
+    ancestor = client.key('Greeting', int(parent_id))
+    query = client.query(kind='Comment', ancestor=ancestor)
+    entities = list(query.fetch())
+    for entity in entities:
+        entity['id'] = entity.key.id
+    return entities
