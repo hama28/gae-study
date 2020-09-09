@@ -1,5 +1,8 @@
 import logging
+
 from flask import Flask, abort, request, render_template
+from google.cloud import storage
+
 import ds
 
 
@@ -11,6 +14,19 @@ logging.getLogger().setLevel(logging.DEBUG)
 def home():
     message = 'App Engine 勉強会 にようこそ'
     return render_template('index.html', message=message)
+
+
+@app.route('/photos', methods=['GET', 'POST'])
+def photos():
+    if request.method == 'GET':
+        return render_template('photos.html')
+    else:
+        uploaded_file = request.files['file']
+        client = storage.Client()
+        bucket = client.get_bucket('gae-study-guestbook-282828')
+        blob = bucket.blob(uploaded_file.filename)
+        blob.upload_from_file(uploaded_file)
+        return render_template('complete.html')
 
 
 @app.route('/api/greetings/<key_id>', methods=['GET', 'PUT', 'DELETE'])

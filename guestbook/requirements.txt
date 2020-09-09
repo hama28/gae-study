@@ -1,1 +1,4 @@
 Flask==1.1.1
+google-cloud-datastore
+google-cloud-core
+google-cloud-storage

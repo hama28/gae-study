@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 from flask import Flask, render_template, request
 from google.cloud import datastore
+from google.cloud import storage
 
 
 app = Flask(__name__)
@@ -11,18 +12,29 @@ app = Flask(__name__)
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
+    if request.method == 'GET':
+        return render_template('index.html')
+    else:
+        uploaded_file = request.files['file']
+        client = storage.Client()
+        bucket = client.get_bucket('my-first-project-288014')
+        blob = bucket.blob(uploaded_file.filename)
+        blob.upload_from_file(uploaded_file)
+        return 'アップロードしました。'
+
+
     # res = insert()
     # res = get_all()
-    key_id = 5073695114526720
+    # key_id = 5073695114526720
     # res = get_by_id(key_id)
     # res = update(key_id)
-    #res = delete(key_id)
-    parent_id = 5631671361601536
+    # res = delete(key_id)
+    # parent_id = 5631671361601536
     # res = add_child(parent_id)
-    res = get_child(parent_id)
-    return res
+    # res = get_child(parent_id)
+    # return res
 
 def insert():
     # Datastoreのクライアントオブジェクトを取得
@@ -125,7 +137,7 @@ def get_child(parent_id):
     # ParentIDを指定して親キーの生成
     ancestor = client.key('Example', parent_id)
     # 親キーを使ってアンセスタークエリを実行
-    query = client.query(kind='EampleChild', ancestor=ancestor)
+    query = client.query(kind='ExampleChild', ancestor=ancestor)
     entities = list(query.fetch())
     # すべてのエンティティにidプロパティを追加
     for entity in entities:
